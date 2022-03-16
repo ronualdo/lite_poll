@@ -1,0 +1,34 @@
+version: "3.9"
+volumes:
+  dbvolume:
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: bitforma
+      POSTGRES_PASSWORD: password
+  web:
+    build:
+      context: .
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        BUNDLE_DEPLOYMENT: '${BUNDLE_DEPLOYMENT:-false}'
+        BUNDLE_WITHOUT: '${BUNDLE_WITHOUT-}'
+    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/bitforma
+      - /bitforma/node_modules
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: bitforma
+      DATABASE_PASSWORD: password
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
