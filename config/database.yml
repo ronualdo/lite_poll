@@ -20,6 +20,10 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch('DB_HOST') %>
+  port: <%+ ENV.fetch('DB_PORT') %>
+  user: <%= ENV.fetch('DB_USER') %>
+  password: <%= ENV.fetch('DB_PASSWORD') %>
 
 development:
   <<: *default
@@ -82,5 +86,3 @@ test:
 production:
   <<: *default
   database: lite_poll_production
-  username: lite_poll
-  password: <%= ENV["LITE_POLL_DATABASE_PASSWORD"] %>

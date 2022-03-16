@@ -1,0 +1,49 @@
+version: "3.9"
+volumes:
+  dbvolume:
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - dbvolume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: lite_poll
+      POSTGRES_PASSWORD: password
+  web:
+    build:
+      context: .
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        BUNDLE_DEPLOYMENT: '${BUNDLE_DEPLOYMENT:-false}'
+        BUNDLE_WITHOUT: '${BUNDLE_WITHOUT-}'
+    command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/lite_poll
+      - /lite_poll/node_modules
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: lite_poll
+      DB_PASSWORD: password
+      RAILS_DEVELOPMENT_HOSTS: web
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  load_test:
+    build:
+      context: load_test
+    profiles:
+      - load_test
+    volumes:
+      - ./load_test:/home/k6
+    environment:
+      LITE_POLL_URL: http://web:3000
+    command: run script.js

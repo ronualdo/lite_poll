@@ -27,3 +27,14 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+/vendor/
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+.default.auto.tfvars
