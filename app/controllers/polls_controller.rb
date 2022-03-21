@@ -10,8 +10,4 @@ class PollsController < ApplicationController
     }
     render json: double_poll, status: 200
   end
-
-  def update
-    render json: { id: 1, label: 'playstation' }, status: 200
-  end
 end
