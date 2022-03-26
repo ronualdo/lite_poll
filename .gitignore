@@ -29,3 +29,10 @@
 /config/master.key
 
 /vendor/
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
