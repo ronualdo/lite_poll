@@ -7,29 +7,6 @@ resource "aws_db_subnet_group" "lite_poll" {
   }
 }
 
-resource "aws_security_group" "rds" {
-  name   = "lite_poll_rds"
-  vpc_id = var.vpc_id
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "lite_poll_rds"
-  }
-}
-
 resource "aws_db_instance" "lite_poll" {
   identifier             = "lite-poll-db"
   instance_class         = "db.t3.micro"
@@ -40,7 +17,7 @@ resource "aws_db_instance" "lite_poll" {
   username               = "admin_user"
   password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.lite_poll.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  vpc_security_group_ids = var.security_group_ids
   parameter_group_name   = aws_db_parameter_group.lite_poll.name
   publicly_accessible    = true
   skip_final_snapshot    = true

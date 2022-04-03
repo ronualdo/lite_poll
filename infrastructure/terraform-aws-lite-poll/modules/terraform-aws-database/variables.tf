@@ -10,8 +10,8 @@ variable "public_subnets" {
   sensitive = false
 }
 
-variable "vpc_id" {
-  description = "vpc id for security group"
-  type = string
+variable "security_group_ids" {
+  description = "rds security group ids"
+  type = list(string)
   sensitive = false
 }
