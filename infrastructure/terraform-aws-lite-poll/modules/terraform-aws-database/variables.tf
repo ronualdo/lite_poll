@@ -4,7 +4,7 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "public_subnets" {
+variable "database_subnets" {
   description = "subnet for the database"
   type = list(string)
   sensitive = false

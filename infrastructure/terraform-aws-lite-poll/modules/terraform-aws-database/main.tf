@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "lite_poll" {
   name       = "lite_poll"
-  subnet_ids = var.public_subnets
+  subnet_ids = var.database_subnets
 
   tags = {
     Name = "lite_poll"

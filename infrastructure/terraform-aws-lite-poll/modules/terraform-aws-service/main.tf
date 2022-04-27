@@ -35,6 +35,32 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   instance_type        = "t2.micro"
 }
 
+resource "aws_autoscaling_group" "default" {
+  desired_capacity     = 1
+  health_check_type    = "EC2"
+  launch_configuration = aws_launch_configuration.ecs_launch_config.name
+  max_size             = 2
+  min_size             = 1
+  name                 = "auto-scaling-group"
+
+  tag {
+    key                 = "Env"
+    propagate_at_launch = true
+    value               = "production"
+  }
+
+  tag {
+    key                 = "Name"
+    propagate_at_launch = true
+    value               = "blog"
+  }
+
+  target_group_arns    = var.scaling_group_arns
+  termination_policies = ["OldestInstance"]
+
+  vpc_zone_identifier = var.vpc_zone_identifiers
+}
+
 resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
   name = "asg"
   vpc_zone_identifier = var.vpc_zone_identifiers
@@ -73,4 +99,10 @@ resource "aws_ecs_service" "worker" {
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task_definition.arn
   desired_count   = 1
+
+  load_balancer {
+    target_group_arn = var.service_target_group_arn
+    container_name = "worker"
+    container_port = 8080
+  }
 }
