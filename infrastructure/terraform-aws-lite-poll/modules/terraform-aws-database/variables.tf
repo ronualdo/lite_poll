@@ -4,14 +4,14 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "database_subnets" {
-  description = "subnet for the database"
+variable "database_subnets_ids" {
+  description = "list of subnets ids"
   type = list(string)
   sensitive = false
 }
 
-variable "security_group_ids" {
-  description = "rds security group ids"
-  type = list(string)
+variable "database_vpc_id" {
+  description = "database vpc id"
+  type = string
   sensitive = false
 }

@@ -1,69 +1,74 @@
-# iam
-data "aws_iam_policy_document" "ecs_agent" {
-  statement {
-    actions = ["sts:AssumeRole"]
+resource "aws_security_group" "ecs_security_group" {
+  name = "lite-poll-ecs-security-group"
+  description = "lite poll ecs security group"
+  vpc_id = var.vpc_id
+  
+  # ingress rule of instance allows the load balancer to hit on any port of the instances
+  # because each time container got diff port. So we can’t decide which ports the new container holds
+  ingress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    principals {
-      type = "Service"
-      identifiers = ["ec2.amazonaws.com"]
-    }
+  
+  egress {
+    from_port = 0
+    to_port = 65535
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-resource "aws_iam_role" "ecs_agent" {
-  name = "ecs-agent"
-  assume_role_policy = data.aws_iam_policy_document.ecs_agent.json
-}
+data "aws_ami" "default" {
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-ecs-hvm-2.0.202*-x86_64-ebs"]
+  }
 
-resource "aws_iam_role_policy_attachment" "ecs_agent" {
-  role = aws_iam_role.ecs_agent.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  most_recent = true
+  owners      = ["amazon"]
 }
-
-resource "aws_iam_instance_profile" "ecs_agent" {
-  name = "ecs-agent"
-  role = aws_iam_role.ecs_agent.name
-}
-
-# end iam
 
 resource "aws_launch_configuration" "ecs_launch_config" {
-  image_id = "ami-00ee4df451840fa9d"
-  iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
-  security_groups      = var.security_group_ids
-  user_data            = "#!/bin/bash\necho ECS_CLUSTER=my-cluster >> /etc/ecs/ecs.config"
-  instance_type        = "t2.micro"
+  name_prefix="lite-poll"
+  image_id = data.aws_ami.default.id
+  iam_instance_profile = var.iam_instance_profile_name
+  security_groups = [aws_security_group.ecs_security_group.id]
+  user_data = "#!/bin/bash\necho ECS_CLUSTER=lite-poll >> /etc/ecs/ecs.config"
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
 }
 
 resource "aws_autoscaling_group" "default" {
-  desired_capacity     = 1
-  health_check_type    = "EC2"
+  desired_capacity = 1
+  health_check_type = "EC2"
   launch_configuration = aws_launch_configuration.ecs_launch_config.name
-  max_size             = 2
-  min_size             = 1
-  name                 = "auto-scaling-group"
+  max_size = 2
+  min_size = 1
+  name = "auto-scaling-group"
 
   tag {
-    key                 = "Env"
+    key = "Env"
     propagate_at_launch = true
-    value               = "production"
+    value = "production"
   }
 
   tag {
-    key                 = "Name"
+    key = "Name"
     propagate_at_launch = true
-    value               = "blog"
+    value = "lite-poll"
   }
 
-  target_group_arns    = var.scaling_group_arns
+  # target_group_arns = var.scaling_group_arns
   termination_policies = ["OldestInstance"]
 
-  vpc_zone_identifier = var.vpc_zone_identifiers
+  vpc_zone_identifier = var.subnets_ids
 }
 
 resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
   name = "asg"
-  vpc_zone_identifier = var.vpc_zone_identifiers
   launch_configuration = aws_launch_configuration.ecs_launch_config.name
 
   desired_capacity = 2
@@ -71,12 +76,9 @@ resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
   max_size = 2
   health_check_grace_period = 300
   health_check_type = "EC2"
+  vpc_zone_identifier = var.subnets_ids
 }
 
-# move repository
-resource "aws_ecr_repository" "image_repo" {
-  name = "lite-poll-image-repo"
-}
 
 resource "aws_ecs_cluster" "cluster" {
   name = "lite-poll-cluster"
@@ -85,7 +87,7 @@ resource "aws_ecs_cluster" "cluster" {
 data "template_file" "task_definition_template" {
   template = file("modules/terraform-aws-service/task_definition.json.tpl")
   vars = {
-    REPOSITORY_URL = replace(aws_ecr_repository.image_repo.repository_url, "https://", "")
+    REPOSITORY_URL = replace(var.image_repo_url, "https://", "")
   }
 }
 
@@ -101,8 +103,8 @@ resource "aws_ecs_service" "worker" {
   desired_count   = 1
 
   load_balancer {
-    target_group_arn = var.service_target_group_arn
+    # target_group_arn = var.service_target_group_arn
     container_name = "worker"
-    container_port = 8080
+    container_port = 3000
   }
 }
