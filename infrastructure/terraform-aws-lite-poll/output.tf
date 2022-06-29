@@ -31,3 +31,9 @@ output "db_user" {
   value       = module.terraform_aws_database.username
   sensitive   = true
 }
+
+output "lite_poll_url" {
+  description = "lite poll url"
+  value = module.terraform_aws_loadbalancer.dns_name
+  sensitive = false
+}

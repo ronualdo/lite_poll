@@ -16,11 +16,11 @@
 #   sensitive = false
 # }
 # 
-# variable "service_target_group_arn" {
-#   description = "scaling group arns"
-#   type = string
-#   sensitive = false
-# }
+variable "service_target_group_arn" {
+  description = "scaling group arns"
+  type = string
+  sensitive = false
+}
 
 variable "vpc_id" {
   description = "service vpc id"
@@ -44,4 +44,28 @@ variable "subnets_ids" {
   description = "identifiers for the subnets to be used by the service"
   type = list(string)
   sensitive = false
+}
+
+variable "db_host" {
+  description = "database host that is going to be used by lite poll"
+  type = string
+  sensitive = true
+}
+
+variable "db_user" {
+  description = "database user to be used by lite poll"
+  type = string
+  sensitive = true
+}
+
+variable "db_password" {
+  description = "database password to be used by lite poll"
+  type = string
+  sensitive = true
+}
+
+variable "db_port" {
+  description = "database port to be used by lite poll"
+  type = string
+  sensitive = true
 }

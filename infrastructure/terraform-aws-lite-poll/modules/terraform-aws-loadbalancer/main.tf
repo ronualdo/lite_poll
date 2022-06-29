@@ -1,9 +1,35 @@
+resource "aws_security_group" "loadbalancer" {
+  description = "security_group_alb"
+
+  egress {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+  }
+
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 80
+    protocol    = "tcp"
+    to_port     = 80
+  }
+
+  name = "security_group_alb"
+
+  tags = {
+    Env  = "production"
+    Name = "security-group--alb"
+  }
+
+  vpc_id = var.vpc_id
+}
+
 resource "aws_alb" "default" {
   name            = "alb"
-  security_groups = var.security_groups
+  security_groups = [aws_security_group.loadbalancer.id]
 
-  # public
-  subnets = var.subnets
+  subnets = var.subnets_ids
 }
 
 resource "aws_alb_target_group" "default" {

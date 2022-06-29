@@ -36,7 +36,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
   image_id = data.aws_ami.default.id
   iam_instance_profile = var.iam_instance_profile_name
   security_groups = [aws_security_group.ecs_security_group.id]
-  user_data = "#!/bin/bash\necho ECS_CLUSTER=lite-poll >> /etc/ecs/ecs.config"
+  user_data = "#!/bin/bash\necho ECS_CLUSTER=lite-poll-cluster >> /etc/ecs/ecs.config"
   instance_type = "t2.micro"
   associate_public_ip_address = true
 }
@@ -88,6 +88,10 @@ data "template_file" "task_definition_template" {
   template = file("modules/terraform-aws-service/task_definition.json.tpl")
   vars = {
     REPOSITORY_URL = replace(var.image_repo_url, "https://", "")
+    DB_HOST = var.db_host,
+    DB_USER = var.db_user,
+    DB_PASSWORD = var.db_password,
+    DB_PORT = var.db_port
   }
 }
 
@@ -103,8 +107,8 @@ resource "aws_ecs_service" "worker" {
   desired_count   = 1
 
   load_balancer {
-    # target_group_arn = var.service_target_group_arn
+    target_group_arn = var.service_target_group_arn
     container_name = "worker"
-    container_port = 3000
+    container_port = 8080
   }
 }

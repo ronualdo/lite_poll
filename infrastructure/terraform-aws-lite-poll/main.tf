@@ -28,15 +28,19 @@ module "terraform_aws_lite_poll_service" {
   iam_instance_profile_name = module.terraform_aws_ecs_agent.role_name
   image_repo_url = module.terraform_aws_image_repo.url
   subnets_ids = module.terraform_aws_network.public_subnets_ids
+  service_target_group_arn = module.terraform_aws_loadbalancer.target_group_arn
+  db_host = module.terraform_aws_database.hostname
+  db_port = module.terraform_aws_database.port
+  db_user = module.terraform_aws_database.username
+  db_password = var.db_password
 }
 
-# 
-# module "terraform_aws_loadbalancer" {
-#   source = "./modules/terraform-aws-loadbalancer"
-#   vpc_id = module.terraform_aws_network.loadbalancer_vpc_id
-#   security_groups = module.terraform_aws_network.loadbalancer_security_group_ids
-#   subnets = module.terraform_aws_network.loadbalancer_subnet_ids
-# }
+ 
+module "terraform_aws_loadbalancer" {
+  source = "./modules/terraform-aws-loadbalancer"
+  vpc_id = module.terraform_aws_network.vpc_id
+  subnets_ids = module.terraform_aws_network.public_subnets_ids
+}
 # 
 # module "terraform_aws_service" {
 #   source = "./modules/terraform-aws-service"

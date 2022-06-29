@@ -4,13 +4,7 @@ variable "vpc_id" {
   sensitive = false
 }
 
-variable "security_groups" {
-  description = "loadbalance security groups"
-  type = list(string)
-  sensitive = false
-}
-
-variable "subnets" {
+variable "subnets_ids" {
   description = "loadbalancer subnets"
   type = list(string)
   sensitive = false
