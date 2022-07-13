@@ -23,9 +23,10 @@ services:
       - .:/bitforma
       - /bitforma/node_modules
     environment:
-      DATABASE_HOST: db
-      DATABASE_USER: bitforma
-      DATABASE_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: bitforma
+      DB_PASSWORD: password
       RAILS_DEVELOPMENT_HOSTS: web
     stdin_open: true
     tty: true
