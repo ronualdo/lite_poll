@@ -9,10 +9,9 @@ resource "aws_security_group" "ecs_security_group" {
     from_port = 0
     to_port = 0
     protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [var.loadbalancer_security_group_id]
   }
 
-  
   egress {
     from_port = 0
     to_port = 65535
@@ -79,7 +78,6 @@ resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
   vpc_zone_identifier = var.subnets_ids
 }
 
-
 resource "aws_ecs_cluster" "cluster" {
   name = "lite-poll-cluster"
 }
@@ -109,6 +107,6 @@ resource "aws_ecs_service" "worker" {
   load_balancer {
     target_group_arn = var.service_target_group_arn
     container_name = "worker"
-    container_port = 8080
+    container_port = 3000
   }
 }

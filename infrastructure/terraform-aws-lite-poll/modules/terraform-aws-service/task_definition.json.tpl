@@ -6,10 +6,19 @@
       "cpu": 2,
       "image": "${REPOSITORY_URL}:0.0.1",
       "environment": [],
-      "command": ["bundle", "exec", "rackup", "-p", "8080", "-E", "production"],
+      "command": ["bundle", "exec", "rackup", "-p", "3000", "-E", "production"],
       "portMappings": [
-        { "containerPort": 8080, "protocol": "tcp" }
+        { "containerPort": 3000, "protocol": "tcp" }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "firelens-container",
+          "awslogs-region": "us-west-2",
+          "awslogs-create-group": "true",
+          "awslogs-stream-prefix": "firelens"
+        }
+      },
       "environment": [
         {
           "name": "DB_HOST",

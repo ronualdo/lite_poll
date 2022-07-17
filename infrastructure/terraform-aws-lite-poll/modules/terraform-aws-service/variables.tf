@@ -69,3 +69,9 @@ variable "db_port" {
   type = string
   sensitive = true
 }
+
+variable "loadbalancer_security_group_id" {
+  description = "loadbalancer security group id"
+  type = string
+  sensitive = false
+}

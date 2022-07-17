@@ -34,7 +34,7 @@ resource "aws_alb" "default" {
 
 resource "aws_alb_target_group" "default" {
   health_check {
-    path = "/"
+    path = "/polls/results"
   }
 
   name     = "alb-target-group"

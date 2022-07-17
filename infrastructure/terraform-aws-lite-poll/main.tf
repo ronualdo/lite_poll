@@ -22,6 +22,12 @@ module "terraform_aws_database" {
   database_vpc_id = module.terraform_aws_network.vpc_id
 }
 
+module "terraform_aws_loadbalancer" {
+  source = "./modules/terraform-aws-loadbalancer"
+  vpc_id = module.terraform_aws_network.vpc_id
+  subnets_ids = module.terraform_aws_network.public_subnets_ids
+}
+
 module "terraform_aws_lite_poll_service" {
   source = "./modules/terraform-aws-service"
   vpc_id = module.terraform_aws_network.vpc_id
@@ -29,23 +35,9 @@ module "terraform_aws_lite_poll_service" {
   image_repo_url = module.terraform_aws_image_repo.url
   subnets_ids = module.terraform_aws_network.public_subnets_ids
   service_target_group_arn = module.terraform_aws_loadbalancer.target_group_arn
+  loadbalancer_security_group_id = module.terraform_aws_loadbalancer.loadbalancer_security_group_id
   db_host = module.terraform_aws_database.hostname
   db_port = module.terraform_aws_database.port
   db_user = module.terraform_aws_database.username
   db_password = var.db_password
 }
-
- 
-module "terraform_aws_loadbalancer" {
-  source = "./modules/terraform-aws-loadbalancer"
-  vpc_id = module.terraform_aws_network.vpc_id
-  subnets_ids = module.terraform_aws_network.public_subnets_ids
-}
-# 
-# module "terraform_aws_service" {
-#   source = "./modules/terraform-aws-service"
-#   security_group_ids = module.terraform_aws_network.service_security_group_ids
-#   vpc_zone_identifiers = module.terraform_aws_network.service_vpc_zone_identifiers
-#   scaling_group_arns = [module.terraform_aws_loadbalancer.target_group_arn]
-#   service_target_group_arn = module.terraform_aws_loadbalancer.target_group_arn
-# } 
