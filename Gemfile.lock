@@ -78,6 +78,8 @@ GEM
     erubi (1.10.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    health_check (3.1.0)
+      railties (>= 5.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     io-console (0.5.11)
@@ -164,6 +166,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   debug
+  health_check
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.0.2, >= 7.0.2.3)
