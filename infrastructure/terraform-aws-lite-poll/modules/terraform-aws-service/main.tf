@@ -41,7 +41,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
 }
 
 resource "aws_autoscaling_group" "default" {
-  desired_capacity = 1
+  desired_capacity = 2
   health_check_type = "EC2"
   launch_configuration = aws_launch_configuration.ecs_launch_config.name
   max_size = 2
@@ -63,18 +63,6 @@ resource "aws_autoscaling_group" "default" {
   # target_group_arns = var.scaling_group_arns
   termination_policies = ["OldestInstance"]
 
-  vpc_zone_identifier = var.subnets_ids
-}
-
-resource "aws_autoscaling_group" "failure_analysis_ecs_asg" {
-  name = "asg"
-  launch_configuration = aws_launch_configuration.ecs_launch_config.name
-
-  desired_capacity = 2
-  min_size = 1
-  max_size = 2
-  health_check_grace_period = 300
-  health_check_type = "EC2"
   vpc_zone_identifier = var.subnets_ids
 }
 
