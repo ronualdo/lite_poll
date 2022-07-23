@@ -81,9 +81,25 @@ data "template_file" "task_definition_template" {
   }
 }
 
+data "template_file" "db_prepare_task_definition_template" {
+  template = file("modules/terraform-aws-service/db_prepare_task_definition.json.tpl")
+  vars = {
+    REPOSITORY_URL = replace(var.image_repo_url, "https://", "")
+    DB_HOST = var.db_host,
+    DB_USER = var.db_user,
+    DB_PASSWORD = var.db_password,
+    DB_PORT = var.db_port
+  }
+}
+
 resource "aws_ecs_task_definition" "task_definition" {
   family                = "worker"
   container_definitions = data.template_file.task_definition_template.rendered
+}
+
+resource "aws_ecs_task_definition" "db_prepare_task_definition" {
+  family                = "db_prepare"
+  container_definitions = data.template_file.db_prepare_task_definition_template.rendered
 }
 
 resource "aws_ecs_service" "worker" {
