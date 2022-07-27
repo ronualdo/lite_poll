@@ -1,6 +1,6 @@
 provider "aws" {
-  profile = var.aws_profile
-  region  = "us-west-2"
+  # profile = var.aws_profile
+  # region  = "us-west-2"
 }
 
 module "terraform_aws_image_repo" {

@@ -1,7 +1,7 @@
 FROM ruby:3.0.2-alpine3.14
 
-ARG UID
-ARG GID
+ARG UID="0"
+ARG GID="0"
 ARG BUNDLE_PATH="vendor/bundle"
 ARG BUNDLE_DEPLOYMENT=true
 ARG BUNDLE_WITHOUT="test development"
@@ -11,13 +11,16 @@ ENV BUNDLE_WITHOUT $BUNDLE_WITHOUT
 ENV HOME "/tmp"
 
 RUN apk add --no-cache make g++ git nodejs-current \
-    gcc musl-dev tzdata postgresql-dev yarn
+    gcc musl-dev tzdata postgresql-dev yarn curl wget unzip docker
+
+RUN cd /usr/local/bin && \
+    curl https://releases.hashicorp.com/terraform/1.1.9/terraform_1.1.9_linux_amd64.zip -o terraform_1.1.9_linux_amd64.zip && \
+    unzip terraform_1.1.9_linux_amd64.zip && \
+    rm terraform_1.1.9_linux_amd64.zip
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
-
-RUN adduser -u ${UID} -D appuser
 
 WORKDIR /bitforma
 RUN chown ${UID}:${GID} /bitforma
