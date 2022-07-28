@@ -22,17 +22,17 @@ RUN cd /usr/local/bin && \
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 
-WORKDIR /bitforma
-RUN chown ${UID}:${GID} /bitforma
+WORKDIR /lite_poll
+RUN chown ${UID}:${GID} /lite_poll
 
 USER ${UID}:${GID}
 
-COPY --chown=${UID}:${GID} Gemfile* /bitforma/
+COPY --chown=${UID}:${GID} Gemfile* /lite_poll/
 
-RUN mkdir /bitforma/vendor && \
+RUN mkdir /lite_poll/vendor && \
     bundle install --jobs=8
 
-COPY --chown=${UID}:${GID} . /bitforma
+COPY --chown=${UID}:${GID} . /lite_poll
 
 EXPOSE 3000
 ENTRYPOINT ["entrypoint.sh"]

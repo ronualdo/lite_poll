@@ -8,7 +8,7 @@ services:
     volumes:
       - dbvolume:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: bitforma
+      POSTGRES_USER: lite_poll
       POSTGRES_PASSWORD: password
   web:
     build:
@@ -20,12 +20,12 @@ services:
         BUNDLE_WITHOUT: '${BUNDLE_WITHOUT-}'
     command: sh -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
-      - .:/bitforma
-      - /bitforma/node_modules
+      - .:/lite_poll
+      - /lite_poll/node_modules
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: bitforma
+      DB_USER: lite_poll
       DB_PASSWORD: password
       RAILS_DEVELOPMENT_HOSTS: web
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
