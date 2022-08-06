@@ -44,3 +44,6 @@ services:
       - load_test
     volumes:
       - ./load_test:/home/k6
+    environment:
+      LITE_POLL_URL: http://web:3000
+    command: run script.js

@@ -54,7 +54,6 @@ export function vote() {
   });
   const poll = JSON.parse(res.body);
   const selectedOption = selectOption(poll.options);
-
   const payload = JSON.stringify({
     poll_id: '1',
     option_id: selectedOption.id,
