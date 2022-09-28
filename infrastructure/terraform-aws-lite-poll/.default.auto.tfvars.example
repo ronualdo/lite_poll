@@ -1,0 +1,13 @@
+aws_config = {
+  region = "replace with aws default region"
+  access_key = "replace with aws access key id"
+  secret_key = "replace with aws secret access key" 
+}
+
+new_relic_config = {
+  api_key = "replace with new relic api key"
+  account_id = "replace with new relic account id"
+}
+
+db_password = "replace with password to be used in lite poll db"
+
