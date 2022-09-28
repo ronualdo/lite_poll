@@ -1,9 +1,3 @@
-variable "db_password" {
-  description = "RDS root user password"
-  type        = string
-  sensitive   = true
-}
-
 variable "new_relic_config" {
   description = "new relic config information"
   type = object({
@@ -12,3 +6,20 @@ variable "new_relic_config" {
   })
   sensitive = true
 }
+
+variable "aws_config" {
+  description = "aws config used to provision infrastructure"
+  type = object({
+    region = string
+    access_key = string
+    secret_key = string
+  })
+  sensitive = true
+}
+
+variable "db_password" {
+  description = "RDS root user password"
+  type        = string
+  sensitive   = true
+}
+
