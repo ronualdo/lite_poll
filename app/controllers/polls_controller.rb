@@ -1,24 +1,27 @@
 # frozen_string_literal: true
 
 class PollsController < ApplicationController
-  def create
-    render json: double_poll, status: :created
-  end
-
   def show
-    render json: double_poll, status: 200
+    poll = Poll.find_by(id: params[:id])
+
+    if poll
+      render json: poll, status: :ok
+    else
+      render json: { errors: ['Not found'] }, status: :not_found
+    end
   end
 
-  private
+  def create
+    new_poll = Poll.new(poll_params)
 
-  def double_poll
-    {
-      id: 1,
-      question: 'what is the best console?',
-      options: [
-        { id: 1, label: 'playstation' },
-        { id: 2, label: 'xbox' }
-      ]
-    }
+    if new_poll.save
+      render json: new_poll, status: :created
+    else
+      render json: new_poll, status: :unprocessable_entity
+    end
+  end
+
+  def poll_params
+    params.require(:poll).permit(:question, options_attributes: [:label])
   end
 end
