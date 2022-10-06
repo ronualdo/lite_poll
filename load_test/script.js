@@ -60,20 +60,42 @@ export const options = {
   },
 }
 
-export function getResults() {
-  const poll_results = http.get(`${__ENV.LITE_POLL_URL}/polls/1/results`);
+export function setup() {
+  const payload = JSON.stringify({
+    poll: {
+      question: "What is the best console?",
+      options_attributes: [
+        { label: "Playstation" },
+        { label: "Xbox" }
+      ]
+    }
+  });
+
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const pollResponse = http.post(`${__ENV.LITE_POLL_URL}/polls`, payload, params);
+  const poll = JSON.parse(pollResponse.body);
+  return { poll: poll };
+}
+
+export function getResults(poll) {
+  const poll_results = http.get(`${__ENV.LITE_POLL_URL}/polls/${poll.id}/results`);
   check(poll_results, {
     'results response': (r) => r.status === 200
   });
 }
 
-export function vote() {
-  const res = http.get(`${__ENV.LITE_POLL_URL}/polls/1`);
+export function vote(poll) {
+  const res = http.get(`${__ENV.LITE_POLL_URL}/polls/${poll.id}`);
   check(res, {
     'poll retrieval successfull': (r) => r.status === 200
   });
-  const poll = res.status === 200 ? JSON.parse(res.body) : [];
-  const selectedOption = selectOption(poll.options);
+  const retrievedPoll = res.status === 200 ? JSON.parse(res.body) : [];
+  const selectedOption = selectOption(retrievedPoll.options);
   const payload = JSON.stringify({
     poll_id: '1',
     option_id: selectedOption.id,
