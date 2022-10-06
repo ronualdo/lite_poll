@@ -2,6 +2,6 @@
 
 class ApplicationController < ActionController::API
   rescue_from StandardError do |error|
-    render json: { errors: [error.message] }, status: :internal_error
+    render json: { errors: [error.message] }, status: :internal_server_error
   end
 end

@@ -3,6 +3,7 @@ git_source(:github) { |repo| 'https://github.com/#{repo}.git' }
 
 ruby '3.0.2'
 
+gem 'active_model_serializers'
 gem 'health_check'
 gem 'lograge'
 gem 'newrelic_rpm'
