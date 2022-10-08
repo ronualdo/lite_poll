@@ -18,13 +18,7 @@ export const options = {
       startRate: 1,
       timeUnit: '1s', // we start at 2 iterations per second
       stages: [
-        // { target: 20, duration: '15m' }, 
-        // { target: 20, duration: '15m' }, 
-        { target: 10, duration: '10m' }, 
-        { target: 10, duration: '5m' }, 
-        { target: 15, duration: '5m' }, 
-        { target: 15, duration: '5m' }, 
-        { target: 22, duration: '5m' }, 
+        { target: 22, duration: '10m' }, 
         { target: 22, duration: '5m' }, 
         { target: 33, duration: '5m' }, 
         { target: 33, duration: '5m' }, 
@@ -39,13 +33,7 @@ export const options = {
       startRate: 1,
       timeUnit: '1s', // we start at 2 iterations per second
       stages: [
-        // { target: 20, duration: '15m' }, 
-        // { target: 20, duration: '15m' }, 
-        { target: 10, duration: '10m' }, 
-        { target: 10, duration: '5m' }, 
-        { target: 15, duration: '5m' }, 
-        { target: 15, duration: '5m' }, 
-        { target: 22, duration: '5m' }, 
+        { target: 22, duration: '10m' }, 
         { target: 22, duration: '5m' }, 
         { target: 33, duration: '5m' }, 
         { target: 33, duration: '5m' }, 
@@ -78,8 +66,7 @@ export function setup() {
   };
 
   const pollResponse = http.post(`${__ENV.LITE_POLL_URL}/polls`, payload, params);
-  const poll = JSON.parse(pollResponse.body);
-  return { poll: poll };
+  return JSON.parse(pollResponse.body);
 }
 
 export function getResults(poll) {
