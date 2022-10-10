@@ -42,6 +42,10 @@
        {
          "name": "RAILS_LOG_TO_STDOUT",
          "value": "true"
+       },
+       {
+         "name": "RAILS_MAX_THREADS",
+         "value": "10"
        }
      ]
   }
