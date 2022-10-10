@@ -85,7 +85,7 @@ export function vote(poll) {
   check(res, {
     'poll retrieval successfull': (r) => isSuccess(r)
   });
-  const retrievedPoll = isSucess(res) ? JSON.parse(res.body) : [];
+  const retrievedPoll = isSuccess(res) ? JSON.parse(res.body) : [];
   const selectedOption = selectOption(retrievedPoll.options);
   const payload = JSON.stringify({
     poll_id: '1',
