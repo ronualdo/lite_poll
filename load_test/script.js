@@ -9,6 +9,10 @@ function selectOption(options) {
   return options[optionIndex];
 }
 
+function isSuccess(response) {
+  return response.status >= 200 && response.status < 300
+}
+
 export const options = {
   scenarios: {
     getResults: {
@@ -72,16 +76,16 @@ export function setup() {
 export function getResults(poll) {
   const poll_results = http.get(`${__ENV.LITE_POLL_URL}/polls/${poll.id}/results`);
   check(poll_results, {
-    'results response': (r) => r.status === 200
+    'results response': (r) => isSuccess(r)
   });
 }
 
 export function vote(poll) {
   const res = http.get(`${__ENV.LITE_POLL_URL}/polls/${poll.id}`);
   check(res, {
-    'poll retrieval successfull': (r) => r.status === 200
+    'poll retrieval successfull': (r) => isSuccess(r)
   });
-  const retrievedPoll = res.status === 200 ? JSON.parse(res.body) : [];
+  const retrievedPoll = isSucess(res) ? JSON.parse(res.body) : [];
   const selectedOption = selectOption(retrievedPoll.options);
   const payload = JSON.stringify({
     poll_id: '1',
@@ -97,6 +101,6 @@ export function vote(poll) {
 
   const votesResponse = http.post(`${__ENV.LITE_POLL_URL}/polls/1/votes`, payload, params);
   check(votesResponse, {
-    'vote response': (r) => res.status === 200 && r.status === 200
+    'vote response': (r) => isSuccess(res) && isSuccess(r)
   });
 }
