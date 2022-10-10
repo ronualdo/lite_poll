@@ -4,7 +4,7 @@
      "memory": 256,
      "name": "lite-poll-migration",
      "cpu": 1,
-     "image": "${REPOSITORY_URL}:0.0.4",
+     "image": "${REPOSITORY_URL}:0.0.1",
      "command": ["bin/rails", "db:prepare"],
      "logConfiguration": {
        "logDriver": "awslogs",
