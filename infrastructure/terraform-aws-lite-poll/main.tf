@@ -7,6 +7,7 @@ provider "aws" {
 
 module "terraform_aws_ssm" {
   source = "./modules/terraform-aws-ssm"
+  new_relic_config = var.new_relic_config
 }
 
 module "terraform_aws_image_repo" {

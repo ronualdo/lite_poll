@@ -36,6 +36,10 @@
          "value": "${DB_PORT}"
        },
        {
+         "name": "NEW_RELIC_LICENSE_KEY",
+         "value": "${NEW_RELIC_LICENSE_KEY}"
+       },
+       {
          "name": "RAILS_LOG_TO_STDOUT",
          "value": "true"
        }

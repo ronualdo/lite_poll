@@ -33,6 +33,10 @@
          "value": "${DB_PASSWORD}"
        },
        {
+         "name": "NEW_RELIC_LICENSE_KEY",
+         "value": "${NEW_RELIC_LICENSE_KEY}"
+       },
+       {
          "name": "DB_PORT",
          "value": "${DB_PORT}"
        }

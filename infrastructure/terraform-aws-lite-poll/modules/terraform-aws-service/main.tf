@@ -84,7 +84,8 @@ data "template_file" "task_definition_template" {
     DB_HOST = var.db_config.host,
     DB_USER = var.db_config.user,
     DB_PASSWORD = var.db_config.password,
-    DB_PORT = var.db_config.port
+    DB_PORT = var.db_config.port,
+    NEW_RELIC_LICENSE_KEY = var.new_relic_config.license_key
   }
 }
 
@@ -95,7 +96,8 @@ data "template_file" "db_prepare_task_definition_template" {
     DB_HOST = var.db_config.host,
     DB_USER = var.db_config.user,
     DB_PASSWORD = var.db_config.password,
-    DB_PORT = var.db_config.port
+    DB_PORT = var.db_config.port,
+    NEW_RELIC_LICENSE_KEY = var.new_relic_config.license_key
   }
 }
 

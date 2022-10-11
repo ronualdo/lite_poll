@@ -56,6 +56,7 @@ variable "new_relic_config" {
   type = object({
     api_key = string
     account_id = string
+    license_key = string
   })
   sensitive = true
 }
